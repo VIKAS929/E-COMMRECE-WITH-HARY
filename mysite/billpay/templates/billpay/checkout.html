@@ -1,0 +1,133 @@
+{% extends 'billpay/basic.html' %}
+{%block title%}title of about {%endblock%}
+{%block style%}
+{%endblock%}
+{%block body%}
+<div class="container" id="allformdata">
+    <div class="col my-4">
+        <h2> Step 1 - My Awesome Cart Express Checkout- Review Your Cart Items</h2>
+        <div id="items">
+            <ul class="list-group">
+               <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <h5>PRODUCTS NAME </h5>
+                    <P class="badge badge-pill"><h5>PRODUCTS QTY</h5></P>
+                    <span class="badge badge-pill"><h5>PRICE</h5></span>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col my-2">
+        <h2> Step 2 - Enter Address & Other Details</h2>
+        <form method="post" action="/billpay/checkout/">{% csrf_token %}
+          <input type="hidden" id="itemsjson" name="itemsjson" >
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="name">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="address1">Address 1</label>
+                <input type="text" class="form-control" id="address1" name="address1" placeholder="1234 Main St">
+            </div>
+            <div class="form-group">
+                <label for="address2">Address 2</label>
+                <input type="text" class="form-control" id="address2" name="address2" placeholder="Apartment, studio, or floor">
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="city">City</label>
+                    <input type="text" class="form-control" name="city" id="city">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="state">State</label>
+                    <input type="text" class="form-control" name="state" id="state" placeholder="State">
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="zip">Zip</label>
+                    <input type="text" class="form-control" name="zip" id="zip">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-group">
+                    <label for="phone">Phone Numer</label>
+                    <input type="tel" class="form-control" name="phone" id="phone">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Pleace oder</button>
+        </form>
+    </div>
+</div>
+
+{%block js%}
+
+<script >
+    if(localStorage.getItem('cart') == null){
+var cart = {};
+}
+else{
+cart = JSON.parse(localStorage.getItem('cart'));
+
+}
+if($.isEmptyObject(cart)){
+  mystr1= `<h5> cart item 0 please add item in cart</h5>`
+  $('#items').append(mystr1)
+}
+else{
+  for (item in cart){
+  let name = cart[item][1]
+  let qty = cart[item][0]
+  let price = cart[item][2]
+  console.log(price)
+  mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    ${name}
+                    <span class="badge badge-primary badge-pill">${qty}</span>
+                    <span class="badge badge-primary badge-pill">${price}</span>
+                </li>`
+  $('#items').append(mystr)
+}
+tprice=0
+titem=0
+for (item in cart){
+tprice=tprice+parseInt(cart[item][2])
+titem=titem+parseInt(cart[item][0])
+}
+tamount= `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    <h5>TOTAL </h5>
+                    <P class="badge badge-pill"><h5>Total Items=${titem}</h5></P>
+                    <span class="badge badge-pill"><h5>${tprice}</h5></span>
+
+                </li>`
+$('#items').append(tamount)
+}
+var allitem=[];
+var ptamount = 0
+for (item in cart){
+  let name = cart[item][1]
+  let qty = cart[item][0]
+  let rs = cart[item][2]
+  ptamount=ptamount + rs
+  allitem.push(name +",qty= "+ qty +",RS= "+rs);
+  }
+allitem.push("Total Aomount=" +ptamount)
+console.log(allitem)
+$('#itemsjson').val(allitem);
+localStorage.clear()
+{% if thank %}
+
+  alert('Thank for Oder,Your oder successfully place, please check your oder status your order id{{id}} in tracker')
+
+  document.location="/billpay/"
+{% endif %}
+</script>
+{%endblock%}
+
+
+
+
+{%endblock%}

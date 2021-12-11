@@ -1,0 +1,24 @@
+{% extends 'billpay/basic.html' %}
+{%block title%}{{product.product_name}} {%endblock%}
+{%block style%} {%endblock%}
+{%block body%}
+<div class="container my-4">
+    <div class="row">
+    <div class="col-md-4">
+    <div class="row">
+        <img src="/media/{{product.image}}" width="233px" height="385px" alt="">
+
+    </div>
+        <div class="row">
+        <button class=" btn btn-primary my-5 mx-3">Buy Now</button>
+        <button class=" btn btn-primary my-5 ">Add to cart</button>
+            </div>
+        </div>
+    <div class="col-md-8">
+        <h5>{{product.product_name}}</h5>
+        <p><b>RS {{product.price}}</b></p>
+        <p>{{product.desc}}</p>
+    </div>
+        </div>
+</div>
+{%endblock%}
